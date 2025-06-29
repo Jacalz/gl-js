@@ -28,31 +28,40 @@ func (contextWatcher) OnDetach() {
 	c = js.Null()
 }
 
-func sliceToByteSlice(s any) []byte {
-	switch s := s.(type) {
-	case []int8:
-		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s))
-	case []int16:
-		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*2)
-	case []int32:
-		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
-	case []int64:
-		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
-	case []uint8:
-		return s
-	case []uint16:
-		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*2)
-	case []uint32:
-		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
-	case []uint64:
-		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
-	case []float32:
-		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
-	case []float64:
-		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
-	default:
-		panic(fmt.Sprintf("jsutil: unexpected value at sliceToBytesSlice: %T", s))
-	}
+func int8toBytes(s []int8) []byte {
+	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s))
+}
+
+func int16toBytes(s []int16) []byte {
+	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*2)
+}
+
+func int32toBytes(s []int32) []byte {
+	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
+}
+
+func int64toBytes(s []int64) []byte {
+	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
+}
+
+func uint16toBytes(s []uint16) []byte {
+	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*2)
+}
+
+func uint32toBytes(s []uint32) []byte {
+	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
+}
+
+func uint64toBytes(s []uint64) []byte {
+	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
+}
+
+func float32toBytes(s []float32) []byte {
+	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
+}
+
+func float64toBytes(s []float64) []byte {
+	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
 }
 
 func SliceToTypedArray(s any) js.Value {
@@ -63,19 +72,19 @@ func SliceToTypedArray(s any) js.Value {
 	switch s := s.(type) {
 	case []int8:
 		a := js.Global().Get("Uint8Array").New(len(s))
-		js.CopyBytesToJS(a, sliceToByteSlice(s))
+		js.CopyBytesToJS(a, int8toBytes(s))
 		runtime.KeepAlive(s)
 		buf := a.Get("buffer")
 		return js.Global().Get("Int8Array").New(buf, a.Get("byteOffset"), a.Get("byteLength"))
 	case []int16:
 		a := js.Global().Get("Uint8Array").New(len(s) * 2)
-		js.CopyBytesToJS(a, sliceToByteSlice(s))
+		js.CopyBytesToJS(a, int16toBytes(s))
 		runtime.KeepAlive(s)
 		buf := a.Get("buffer")
 		return js.Global().Get("Int16Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/2)
 	case []int32:
 		a := js.Global().Get("Uint8Array").New(len(s) * 4)
-		js.CopyBytesToJS(a, sliceToByteSlice(s))
+		js.CopyBytesToJS(a, int32toBytes(s))
 		runtime.KeepAlive(s)
 		buf := a.Get("buffer")
 		return js.Global().Get("Int32Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/4)
@@ -86,25 +95,25 @@ func SliceToTypedArray(s any) js.Value {
 		return a
 	case []uint16:
 		a := js.Global().Get("Uint8Array").New(len(s) * 2)
-		js.CopyBytesToJS(a, sliceToByteSlice(s))
+		js.CopyBytesToJS(a, uint16toBytes(s))
 		runtime.KeepAlive(s)
 		buf := a.Get("buffer")
 		return js.Global().Get("Uint16Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/2)
 	case []uint32:
 		a := js.Global().Get("Uint8Array").New(len(s) * 4)
-		js.CopyBytesToJS(a, sliceToByteSlice(s))
+		js.CopyBytesToJS(a, uint32toBytes(s))
 		runtime.KeepAlive(s)
 		buf := a.Get("buffer")
 		return js.Global().Get("Uint32Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/4)
 	case []float32:
 		a := js.Global().Get("Uint8Array").New(len(s) * 4)
-		js.CopyBytesToJS(a, sliceToByteSlice(s))
+		js.CopyBytesToJS(a, float32toBytes(s))
 		runtime.KeepAlive(s)
 		buf := a.Get("buffer")
 		return js.Global().Get("Float32Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/4)
 	case []float64:
 		a := js.Global().Get("Uint8Array").New(len(s) * 8)
-		js.CopyBytesToJS(a, sliceToByteSlice(s))
+		js.CopyBytesToJS(a, float64toBytes(s))
 		runtime.KeepAlive(s)
 		buf := a.Get("buffer")
 		return js.Global().Get("Float64Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/8)
