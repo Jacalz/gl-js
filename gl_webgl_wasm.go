@@ -71,52 +71,45 @@ func SliceToTypedArray(s any) js.Value {
 
 	switch s := s.(type) {
 	case []int8:
-		a := js.Global().Get("Uint8Array").New(len(s))
+		a := js.Global().Get("Int8Array").New(len(s))
 		js.CopyBytesToJS(a, int8toBytes(s))
 		runtime.KeepAlive(s)
-		buf := a.Get("buffer")
-		return js.Global().Get("Int8Array").New(buf, a.Get("byteOffset"), a.Get("byteLength"))
+		return a
 	case []int16:
-		a := js.Global().Get("Uint8Array").New(len(s) * 2)
+		a := js.Global().Get("Int16Array").New(len(s))
 		js.CopyBytesToJS(a, int16toBytes(s))
 		runtime.KeepAlive(s)
-		buf := a.Get("buffer")
-		return js.Global().Get("Int16Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/2)
+		return a
 	case []int32:
-		a := js.Global().Get("Uint8Array").New(len(s) * 4)
+		a := js.Global().Get("Int32Array").New(len(s))
 		js.CopyBytesToJS(a, int32toBytes(s))
 		runtime.KeepAlive(s)
-		buf := a.Get("buffer")
-		return js.Global().Get("Int32Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/4)
+		return a
 	case []uint8:
 		a := js.Global().Get("Uint8Array").New(len(s))
 		js.CopyBytesToJS(a, s)
 		runtime.KeepAlive(s)
 		return a
 	case []uint16:
-		a := js.Global().Get("Uint8Array").New(len(s) * 2)
+		a := js.Global().Get("Uint16Array").New(len(s))
 		js.CopyBytesToJS(a, uint16toBytes(s))
 		runtime.KeepAlive(s)
-		buf := a.Get("buffer")
-		return js.Global().Get("Uint16Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/2)
+		return a
 	case []uint32:
-		a := js.Global().Get("Uint8Array").New(len(s) * 4)
+		a := js.Global().Get("Uint32Array").New(len(s))
 		js.CopyBytesToJS(a, uint32toBytes(s))
 		runtime.KeepAlive(s)
-		buf := a.Get("buffer")
-		return js.Global().Get("Uint32Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/4)
+		return a
 	case []float32:
-		a := js.Global().Get("Uint8Array").New(len(s) * 4)
+		a := js.Global().Get("Float32Array").New(len(s))
 		js.CopyBytesToJS(a, float32toBytes(s))
 		runtime.KeepAlive(s)
-		buf := a.Get("buffer")
-		return js.Global().Get("Float32Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/4)
+		return a
 	case []float64:
-		a := js.Global().Get("Uint8Array").New(len(s) * 8)
+		a := js.Global().Get("Float64Array").New(len(s))
 		js.CopyBytesToJS(a, float64toBytes(s))
 		runtime.KeepAlive(s)
-		buf := a.Get("buffer")
-		return js.Global().Get("Float64Array").New(buf, a.Get("byteOffset"), a.Get("byteLength").Int()/8)
+		return a
 	default:
 		panic(fmt.Sprintf("jsutil: unexpected value at SliceToTypedArray: %T", s))
 	}
