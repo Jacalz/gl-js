@@ -25,7 +25,7 @@ var ContextWatcher contextWatcher
 type contextWatcher struct{}
 
 func (contextWatcher) OnMakeCurrent(context any) {}
-func (contextWatcher) OnDetach()                         {}
+func (contextWatcher) OnDetach()                 {}
 
 func ActiveTexture(texture Enum) {
 	C.glActiveTexture(texture.c())

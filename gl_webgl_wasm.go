@@ -21,6 +21,7 @@ func (contextWatcher) OnMakeCurrent(context any) {
 	// context must be a WebGLRenderingContext js.Value.
 	c = context.(js.Value)
 }
+
 func (contextWatcher) OnDetach() {
 	c = js.Null()
 }
