@@ -24,7 +24,7 @@ var ContextWatcher contextWatcher
 
 type contextWatcher struct{}
 
-func (contextWatcher) OnMakeCurrent(context interface{}) {}
+func (contextWatcher) OnMakeCurrent(context any) {}
 func (contextWatcher) OnDetach()                         {}
 
 func ActiveTexture(texture Enum) {

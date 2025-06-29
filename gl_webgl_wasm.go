@@ -21,7 +21,7 @@ var ContextWatcher contextWatcher
 
 type contextWatcher struct{}
 
-func (contextWatcher) OnMakeCurrent(context interface{}) {
+func (contextWatcher) OnMakeCurrent(context any) {
 	// context must be a WebGLRenderingContext js.Value.
 	c = context.(js.Value)
 }
@@ -29,7 +29,7 @@ func (contextWatcher) OnDetach() {
 	c = js.Null()
 }
 
-func sliceToByteSlice(s interface{}) []byte {
+func sliceToByteSlice(s any) []byte {
 	switch s := s.(type) {
 	case []int8:
 		h := (*reflect.SliceHeader)(unsafe.Pointer(&s))
@@ -81,7 +81,7 @@ func sliceToByteSlice(s interface{}) []byte {
 	}
 }
 
-func SliceToTypedArray(s interface{}) js.Value {
+func SliceToTypedArray(s any) js.Value {
 	if s == nil {
 		return js.Null()
 	}
@@ -195,7 +195,7 @@ func BlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1 int,
 	c.Call("blitFramebuffer", srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, int(mask), int(filter))
 }
 
-func BufferData(target Enum, data interface{}, usage Enum) {
+func BufferData(target Enum, data any, usage Enum) {
 	c.Call("bufferData", int(target), SliceToTypedArray(data), int(usage))
 }
 
@@ -203,7 +203,7 @@ func BufferInit(target Enum, size int, usage Enum) {
 	c.Call("bufferData", int(target), size, int(usage))
 }
 
-func BufferSubData(target Enum, offset int, data interface{}) {
+func BufferSubData(target Enum, offset int, data any) {
 	c.Call("bufferSubData", int(target), offset, SliceToTypedArray(data))
 }
 
@@ -235,11 +235,11 @@ func CompileShader(s Shader) {
 	c.Call("compileShader", s.Value)
 }
 
-func CompressedTexImage2D(target Enum, level int, internalformat Enum, width, height, border int, data interface{}) {
+func CompressedTexImage2D(target Enum, level int, internalformat Enum, width, height, border int, data any) {
 	c.Call("compressedTexImage2D", int(target), level, int(internalformat), width, height, border, SliceToTypedArray(data))
 }
 
-func CompressedTexSubImage2D(target Enum, level, xoffset, yoffset, width, height int, format Enum, data interface{}) {
+func CompressedTexSubImage2D(target Enum, level, xoffset, yoffset, width, height int, format Enum, data any) {
 	c.Call("compressedTexSubImage2D", int(target), level, xoffset, yoffset, width, height, int(format), SliceToTypedArray(data))
 }
 
@@ -662,7 +662,7 @@ func StencilOpSeparate(face, sfail, dpfail, dppass Enum) {
 	c.Call("stencilOpSeparate", int(face), int(sfail), int(dpfail), int(dppass))
 }
 
-func TexImage2D(target Enum, level int, width, height int, format Enum, ty Enum, data interface{}) {
+func TexImage2D(target Enum, level int, width, height int, format Enum, ty Enum, data any) {
 	c.Call("texImage2D", int(target), level, int(format), width, height, 0, int(format), int(ty), SliceToTypedArray(data))
 }
 
@@ -670,7 +670,7 @@ func TexImage2DMultisample(target Enum, samples int, internalformat Enum, width,
 	println("TexImage2DMultisample: not available on WebGL.")
 }
 
-func TexSubImage2D(target Enum, level int, x, y, width, height int, format, ty Enum, data interface{}) {
+func TexSubImage2D(target Enum, level int, x, y, width, height int, format, ty Enum, data any) {
 	c.Call("texSubImage2D", int(target), level, x, y, width, height, format, int(ty), SliceToTypedArray(data))
 }
 
