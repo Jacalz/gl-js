@@ -10,7 +10,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"math"
-	"reflect"
 	"runtime"
 	"strconv"
 	"syscall/js"
@@ -32,50 +31,25 @@ func (contextWatcher) OnDetach() {
 func sliceToByteSlice(s any) []byte {
 	switch s := s.(type) {
 	case []int8:
-		h := (*reflect.SliceHeader)(unsafe.Pointer(&s))
-		return *(*[]byte)(unsafe.Pointer(h))
+		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s))
 	case []int16:
-		h := (*reflect.SliceHeader)(unsafe.Pointer(&s))
-		h.Len *= 2
-		h.Cap *= 2
-		return *(*[]byte)(unsafe.Pointer(h))
+		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*2)
 	case []int32:
-		h := (*reflect.SliceHeader)(unsafe.Pointer(&s))
-		h.Len *= 4
-		h.Cap *= 4
-		return *(*[]byte)(unsafe.Pointer(h))
+		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
 	case []int64:
-		h := (*reflect.SliceHeader)(unsafe.Pointer(&s))
-		h.Len *= 8
-		h.Cap *= 8
-		return *(*[]byte)(unsafe.Pointer(h))
+		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
 	case []uint8:
 		return s
 	case []uint16:
-		h := (*reflect.SliceHeader)(unsafe.Pointer(&s))
-		h.Len *= 2
-		h.Cap *= 2
-		return *(*[]byte)(unsafe.Pointer(h))
+		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*2)
 	case []uint32:
-		h := (*reflect.SliceHeader)(unsafe.Pointer(&s))
-		h.Len *= 4
-		h.Cap *= 4
-		return *(*[]byte)(unsafe.Pointer(h))
+		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
 	case []uint64:
-		h := (*reflect.SliceHeader)(unsafe.Pointer(&s))
-		h.Len *= 8
-		h.Cap *= 8
-		return *(*[]byte)(unsafe.Pointer(h))
+		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
 	case []float32:
-		h := (*reflect.SliceHeader)(unsafe.Pointer(&s))
-		h.Len *= 4
-		h.Cap *= 4
-		return *(*[]byte)(unsafe.Pointer(h))
+		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
 	case []float64:
-		h := (*reflect.SliceHeader)(unsafe.Pointer(&s))
-		h.Len *= 8
-		h.Cap *= 8
-		return *(*[]byte)(unsafe.Pointer(h))
+		return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
 	default:
 		panic(fmt.Sprintf("jsutil: unexpected value at sliceToBytesSlice: %T", s))
 	}
