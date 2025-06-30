@@ -9,110 +9,59 @@ import (
 	"unsafe"
 )
 
-func int8ToJSArray(s []int8) js.Value {
-	a := js.Global().Get("Int8Array").New(len(s))
-	js.CopyBytesToJS(a, int8toBytes(s))
+func sliceToBytes[T comparable](s []T) []byte {
+	size := 0
+	if len(s) > 0 {
+		size = int(unsafe.Sizeof(s[0]))
+	}
+	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*size)
+}
+
+func sliceToJSArray[T comparable](arrayType string, s []T) js.Value {
+	a := js.Global().Get(arrayType).New(len(s))
+	js.CopyBytesToJS(a, sliceToBytes(s))
 	runtime.KeepAlive(s)
 	return a
 }
 
-func int8toBytes(s []int8) []byte {
-	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s))
+func int8ToJSArray(s []int8) js.Value {
+	return sliceToJSArray("Int8Array", s)
 }
 
 func int16ToJSArray(s []int16) js.Value {
-	a := js.Global().Get("Int16Array").New(len(s))
-	js.CopyBytesToJS(a, int16toBytes(s))
-	runtime.KeepAlive(s)
-	return a
-}
-
-func int16toBytes(s []int16) []byte {
-	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*2)
+	return sliceToJSArray("Int16Array", s)
 }
 
 func int32ToJSArray(s []int32) js.Value {
-	a := js.Global().Get("Int32Array").New(len(s))
-	js.CopyBytesToJS(a, int32toBytes(s))
-	runtime.KeepAlive(s)
-	return a
-}
-
-func int32toBytes(s []int32) []byte {
-	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
+	return sliceToJSArray("Int32Array", s)
 }
 
 func int64ToJSArray(s []int64) js.Value {
-	a := js.Global().Get("Int64Array").New(len(s))
-	js.CopyBytesToJS(a, int64toBytes(s))
-	runtime.KeepAlive(s)
-	return a
-}
-
-func int64toBytes(s []int64) []byte {
-	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
+	return sliceToJSArray("Int64Array", s)
 }
 
 func uint8ToJSArray(s []uint8) js.Value {
-	a := js.Global().Get("Uint8Array").New(len(s))
-	js.CopyBytesToJS(a, s)
-	runtime.KeepAlive(s)
-	return a
+	return sliceToJSArray("Uint8Array", s)
 }
 
 func uint16ToJSArray(s []uint16) js.Value {
-	a := js.Global().Get("Uint16Array").New(len(s))
-	js.CopyBytesToJS(a, uint16toBytes(s))
-	runtime.KeepAlive(s)
-	return a
-}
-
-func uint16toBytes(s []uint16) []byte {
-	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*2)
+	return sliceToJSArray("Uint16Array", s)
 }
 
 func uint32ToJSArray(s []uint32) js.Value {
-	a := js.Global().Get("Uint32Array").New(len(s))
-	js.CopyBytesToJS(a, uint32toBytes(s))
-	runtime.KeepAlive(s)
-	return a
-}
-
-func uint32toBytes(s []uint32) []byte {
-	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
+	return sliceToJSArray("Uint32Array", s)
 }
 
 func uint64ToJSArray(s []uint64) js.Value {
-	a := js.Global().Get("Uint64Array").New(len(s))
-	js.CopyBytesToJS(a, uint64toBytes(s))
-	runtime.KeepAlive(s)
-	return a
-}
-
-func uint64toBytes(s []uint64) []byte {
-	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
+	return sliceToJSArray("Uint64Array", s)
 }
 
 func float32ToJSArray(s []float32) js.Value {
-	a := js.Global().Get("Float32Array").New(len(s))
-	js.CopyBytesToJS(a, float32toBytes(s))
-	runtime.KeepAlive(s)
-	return a
-}
-
-func float32toBytes(s []float32) []byte {
-	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*4)
+	return sliceToJSArray("Float32Array", s)
 }
 
 func float64ToJSArray(s []float64) js.Value {
-	a := js.Global().Get("Float64Array").New(len(s))
-	js.CopyBytesToJS(a, float64toBytes(s))
-	runtime.KeepAlive(s)
-	return a
-}
-
-func float64toBytes(s []float64) []byte {
-	return unsafe.Slice((*byte)(unsafe.Pointer(&s[0])), len(s)*8)
+	return sliceToJSArray("Float64Array", s)
 }
 
 func SliceToTypedArray(s any) js.Value {
