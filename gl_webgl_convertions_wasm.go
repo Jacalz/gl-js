@@ -76,12 +76,16 @@ func SliceToTypedArray(s any) js.Value {
 		return int16ToJSArray(s)
 	case []int32:
 		return int32ToJSArray(s)
+	case []int64:
+		return int64ToJSArray(s)
 	case []uint8:
 		return uint8ToJSArray(s)
 	case []uint16:
 		return uint16ToJSArray(s)
 	case []uint32:
 		return uint32ToJSArray(s)
+	case []uint64:
+		return uint64ToJSArray(s)
 	case []float32:
 		return float32ToJSArray(s)
 	case []float64:
